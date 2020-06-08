@@ -1,9 +1,13 @@
-const { checkAndGenerate, createElement } = require('./util');
+const { checkAndGenerate, createElement, printTitle } = require('./util');
 
 const initApp = () => {
 	// Initializes the app, registers the button click listener
 	const newUserButton = document.querySelector('#btnAddUser');
 	newUserButton.addEventListener('click', addUser);
+
+	// lecture 5, async tests
+	const button = document.querySelector('#btnGetPost');
+	button.addEventListener('click', printTitle);
 };
 
 const addUser = () => {
