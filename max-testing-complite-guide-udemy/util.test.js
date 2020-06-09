@@ -1,18 +1,18 @@
-//jest.mock('./http');
-//jest.mock('./axios'); this is not needed, will be run automatically
+jest.mock('./http');
+//jest.mock('./axios'); instead of http.js we can test one level up with axios.js. We don't need to call it, will be run automatically
 
 const puppeteer = require('puppeteer');
 const { generateText, checkAndGenerate, loadTitle } = require('./util'); // mora ovako, ne sa import mada moze da se podesi
 
 test('should output name and age', () => {
-	const text1 = generateText('Zoki', 36);
-	expect(text1).toBe('Zoki (36 years old)');
+	const text1 = generateText('Zoki', 36); // just call the function which we want to test
+	expect(text1).toBe('Zoki (36 years old)'); // Check result which function should return
 
 	const text2 = generateText('Jeka', 33);
 	expect(text2).toBe('Jeka (33 years old)');
 });
 
-// avoid false positives
+// avoid false positives, test if passed parameters are wrong
 test('should output data-less text', () => {
 	const text1 = generateText('', null);
 	expect(text1).toBe(' (null years old)');
@@ -23,7 +23,7 @@ test('should output data-less text', () => {
 
 // integration test for combining functions, function which call other function
 test('should generate a valid text output', () => {
-	const text1 = checkAndGenerate('Zoran', 36);
+	const text1 = checkAndGenerate('Zoran', 36); // Will call generateText()
 	expect(text1).toBe('Zoran (36 years old)');
 });
 
@@ -38,6 +38,7 @@ test('should create an element with text and correct class', async () => {
 	await page.goto(
 		'file:///Users/zoran/zoran-git/js-jest-untit-testing/max-testing-complite-guide-udemy/index.html'
 	);
+	// We pick up this from html file, and test steps like real User would use it in the Browser
 	await page.click('input#name');
 	await page.type('input#name', 'Zoki');
 	await page.click('input#age');
@@ -47,10 +48,13 @@ test('should create an element with text and correct class', async () => {
 	expect(finalText).toBe('Zoki (44 years old)');
 }, 10000);
 
-// lecture 5, async tests
-test('should print an uppercase text', () => {
-	// instead using fetch we need to MOCK it!!!
+// lecture 5, async tests with MOCKS
+test('async tests with MOCKS -> should print an uppercase text', () => {
+	// instead using fetch we need to MOCK it!!!. We need to create __mocks__ folder and include files with jest.mock('./fileName')
+	// we can test on 2 levels, in http.js and axios.js
+	// we just want to simulate result of what is fetched, not functionality of fetching
 	loadTitle().then((title) => {
+		//console.log(title);
 		expect(title).toBe('DELECTUS AUT AUTEM');
 	});
 });
